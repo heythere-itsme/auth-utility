@@ -1,27 +1,17 @@
 {
-  "name": "auth-util",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "auth-util-monorepo",
+  "private": true,
+  "packageManager": "npm@10.2.4",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
-    "dotenv": "^17.4.2",
-    "jsonwebtoken": "^9.0.3",
-    "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0"
+    "build": "turbo run build",
+    "dev": "turbo run dev"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^25.6.2",
-    "@types/passport": "^1.0.17",
-    "@types/passport-google-oauth20": "^2.0.17",
-    "ts-node": "^10.9.2",
+    "@types/node": "^25.7.0",
+    "turbo": "^2.9.12",
     "typescript": "^6.0.3"
   }
 }

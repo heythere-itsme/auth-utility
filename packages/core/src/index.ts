@@ -1,5 +1,5 @@
-import { setupGoogleStrategy } from "./src/utils/googleStratergy";
-import { handleGoogleCallback } from "./src/controller/authController";
+import { setupGoogleStrategy } from "./utils/googleStratergy.js";
+import { handleGoogleCallback } from "./controller/authController.js";
 
 export const initialzeAuthUtility = (config: any) => {
   setupGoogleStrategy(config);

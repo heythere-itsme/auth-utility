@@ -3,7 +3,7 @@ import {
   Strategy as GoogleStrategy,
   VerifyCallback,
 } from "passport-google-oauth20";
-import { GoogleAuthConfig } from "../types/auth";
+import { GoogleAuthConfig } from "../types/auth.js";
 
 export const setupGoogleStrategy = (config: GoogleAuthConfig): void => {
   passport.use(

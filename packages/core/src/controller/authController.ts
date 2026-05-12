@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { JWTPayload } from "../types/auth";
+import { JWTPayload } from "../types/auth.js";
 
 export const handleGoogleCallback = (req: Request, res: Response) => {
   const user = req.user;
