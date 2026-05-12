@@ -1,0 +1,23 @@
+{
+  "name": "@mayank/auth-cli",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": {
+    "auth-util": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "@mayank/auth-core": "*",
+    "commander": "^12.0.0",
+    "fs-extra": "^11.2.0",
+    "picocolors": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^25.7.0"
+  }
+}
