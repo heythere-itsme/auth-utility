@@ -6,21 +6,20 @@ import color from 'picocolors';
 const program = new Command();
 
 program
-  .name('auth-util')
-  .description('A shadcn-style CLI for authentication utilities')
-  .version('1.0.0');
+  .name('authutil-cli')
+  .description('Authentication utilities Package Testing')
+  .version('1.0.5');
 
 program
   .command('init')
-  .description('Initialize the auth utility in your project')
+  .description('Select the authentication Method')
   .action(async () => {
     p.intro(color.bgCyan(color.black(' auth-util-init ')));
 
     const projectType = await p.select({
-      message: 'Which framework are you using?',
+      message: 'Which method to select',
       options: [
-        { value: 'next', label: 'Next.js' },
-        { value: 'express', label: 'Express (Backend only)' },
+        { value: 'google', label: 'Google Oauth' },
       ],
     });
 
