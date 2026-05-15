@@ -1,19 +1,29 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { useGoogleAuth } from "@/hooks/useGoogleAuth";
 import { cn } from "@/lib/utils";
 
 export interface GoogleAuthButtonProps {
   onClick?: () => void;
   className?: string;
+  config: {
+    clientId: string;
+    clientSecret: string;
+    callbackURL: string;
+  };
 }
 
-export const GoogleAuthButton = React.forwardRef<
-  HTMLButtonElement,
-  GoogleAuthButtonProps
->(({ onClick, className, ...props }, ref) => {
+export const GoogleAuthButton = ({ config, className, onClick, ...props }: GoogleAuthButtonProps) => {
+  const { signIn } = useGoogleAuth(config);
+
+  const handleGoogleAuth = useCallback(() => {
+    // Trigger the Google Auth flow
+    signIn();
+    onClick?.();
+  }, [signIn, onClick]);
+
   return (
     <button
-      ref={ref}
-      onClick={onClick}
+      onClick={handleGoogleAuth}
       className={cn(
         "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors",
         "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
@@ -43,6 +53,4 @@ export const GoogleAuthButton = React.forwardRef<
       </span>
     </button>
   );
-});
-
-GoogleAuthButton.displayName = "GoogleAuthButton";
+};
