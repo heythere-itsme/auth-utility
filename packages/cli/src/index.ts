@@ -28,11 +28,13 @@ const AUTH_REGISTRY = {
   }
 }
 
+// Initial Comments to diplay
 program
   .name('authutil-cli')
   .description('Authentication utilities Package Testing')
   .version('1.1.0');
 
+// Option for user to choose the Auth Method
 program
   .command('add')
   .description("To add the selected authentication")
@@ -50,53 +52,42 @@ program
       p.cancel('Aborted');
       return;
     }
+// Fetching the File from github
+    const fetchGithubFile = async (githubUrl: string) => {
+          const rawUrl = githubUrl
+            .replace("github.com", "raw.githubusercontent.com")
+            .replace("/blob/", "/");
 
-    const customComponentPath = await p.text({
-      message: 'Where should add this component',
-      placeholder: 'components/auth_util/ui/GoogleAuthButton.tsx"',
-      defaultValue: 'components/auth_util/ui/GoogleAuthButton.tsx"',
-    })
+          const res = await fetch(rawUrl);
+          if (!res.ok) throw new Error(`Could not fetch ${path.basename(githubUrl)}`);
+          return res.text();
+        };
 
-    const customStratergyPath = await p.text({
-      message: 'Where to add this logic',
-      placeholder: 'components/auth_util/logic/googleStratergy.ts',
-      defaultValue: 'components/auth_util/logic/googleStratergy.ts'
-    })
-    const customControllerPath = await p.text({
-      message: 'Where to add this logic',
-      placeholder: 'components/auth_util/logic/authController.ts',
-        defaultValue: 'components/auth_util/logic/authController.ts'
-    })
+    // Fetching starts Here
+    const s = p.spinner();
+    s.start('Fetching Files...');
 
-    if (p.isCancel(customStratergyPath) && p.isCancel(customComponentPath) && p.isCancel(customControllerPath)) {
-      p.cancel('Aborted at files path');
-      return;
-    }
-
-    const s = p.spinner()
-    s.start('Connecting to services, downloading assets ...');
-
+// Try and Catch code
     try {
       const selectedData = AUTH_REGISTRY[stratergySelection as 'google'];
-      const componentDest = path.join(process.cwd(), customComponentPath as string);
-      const stratergyDest = path.join(process.cwd(), customStratergyPath as string);
-      const controllerDest = path.join(process.cwd(), customControllerPath as string)
-
-      const componentRes = await fetch(selectedData.files[0].path);
-      const stratergyRes = await fetch(selectedData.files[1].path);
-      const controllerRes = await fetch(selectedData.files[2].path);
-
-      if (!componentRes.ok || !stratergyRes.ok || !controllerRes.ok) {
-        throw new Error('Failed to retrieve files');
+      const [componentCode, strategyCode, controllerCode] = await Promise.all(
+              selectedData.files.map(file => fetchGithubFile(file.path))
+            );
+      const filesToWrite = [
+              { dest: selectedData.files[0].userTarget, code: componentCode },
+              { dest: selectedData.files[1].userTarget, code: strategyCode },
+              { dest: selectedData.files[2].userTarget, code: controllerCode }
+            ];
+      for (const file of filesToWrite) {
+              const fullPath = path.join(process.cwd(), file.dest);
+              await fs.mkdir(path.dirname(fullPath), { recursive: true });
+              await fs.writeFile(fullPath, file.code);
       }
-
-      let componentCode = await componentRes.text();
-      let stratergyCode = await stratergyRes.text();
-      let controllerCoed = await controllerRes.text();
-
-
-    } catch (error) {
-
+      s.stop(color.green('Files successfully added to your project!'));
+      p.outro(color.blue('Setup Completed!'))
+    } catch (error: any) {
+      s.stop(color.red('Installation failed'));
+      p.note(error.message, 'Error Detail');
     }
 
   })
